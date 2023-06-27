@@ -41,8 +41,12 @@ raw = pd.read_csv("resources/train.csv")
 result=pd.read_csv("resources/submission.csv")
 
 # Displaying the image
-image = "resources/logo.jpg"  # Replace with the path to your image file
-st.image(image, width=200)
+image = "resources/logo3.png"  # Replace with the path to your image file
+#st.image(image, width=200)
+
+cola, mid, colb = st.columns([40,1,40])
+with mid:
+	st.image(image, width=200)
 
 # The main function where we will build the actual app
 def main():
@@ -67,7 +71,7 @@ def main():
     """,
     unsafe_allow_html=True,
 	)
-	st.markdown('***<p class="centered-title">From data chaos to strategic insights: Empowering businesses through analytics</p>***', unsafe_allow_html=True)
+	st.markdown('***<p class="centered-title">From data chaos to strategic insights: Empowering businesses through analytics.</p>***', unsafe_allow_html=True)
 
 
 	
@@ -133,17 +137,13 @@ def main():
 
 
 	if selection == "Visualisation":
-		st.info("General Information")
+		st.info("The collection of this data was funded by a Canada Foundation for Innovation JELF Grant to Chris Bauch, University of Waterloo. The dataset aggregates tweets pertaining to climate change collected between Apr 27, 2015 and Feb 21, 2018. In total, 43,943 tweets were collected. Each tweet is labelled as one of 4 classes (News, Pro, Neutral and Anti).")
 		# You can read a markdown file from supporting resources folder
-		st.markdown("Some information here")
 
 		st.subheader("View Data")
 		if st.checkbox('Show raw data'): # data is hidden if box is unchecked
 			
 			st.write(raw[['sentiment', 'message']].head()) # will write the df to the page
-		elif st.checkbox('Show Prediction'):
-
-			st.write(result[['tweetid', 'sentiment']].head()) # will write the df to the page
 
 			opt = st.radio('Plot  type:',['Bar', 'Word Cloud'])
 			if opt=='Bar':
@@ -161,6 +161,10 @@ def main():
 				
 				plt.axis('off')
 				st.pyplot(plt.show())
+		elif st.checkbox('Show Prediction'):
+
+			st.write(result[['tweetid', 'sentiment']].head()) # will write the df to the page
+			st.info("The Machine Learning Model used is the Logistic Regression.")
 	if selection =="Contact Us":
 			col1, mid, col2 = st.columns([80,1,80])
 			st.markdown("**Email:** info@climateconsciousconsulting.com")
