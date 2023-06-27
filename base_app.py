@@ -44,7 +44,7 @@ result=pd.read_csv("resources/submission.csv")
 image = "resources/logo3.png"  # Replace with the path to your image file
 #st.image(image, width=200)
 
-cola, mid, colb = st.columns([40,1,40])
+cola, mid, colb = st.columns([25,1,40])
 with mid:
 	st.image(image, width=200)
 
@@ -125,10 +125,8 @@ def main():
 
 		table = PrettyTable()
 		table.field_names = ["", "Position", "LinkedIn"]
-
 		for name, position,linkedin in job_titles:
     			table.add_row([name, position,linkedin])
-
 		st.write(table)
 
 		
