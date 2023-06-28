@@ -30,6 +30,7 @@ import streamlit_scrollable_textbox as stx
 from wordcloud import WordCloud
 from prettytable import PrettyTable
 import matplotlib.pyplot as plt
+import datetime
 
 # Data dependencies
 import pandas as pd
@@ -41,6 +42,10 @@ tweet_cv = joblib.load(news_vectorizer) # loading your vectorizer from the pkl f
 # Load your raw data
 raw = pd.read_csv("resources/train.csv")
 result=pd.read_csv("resources/submission.csv")
+pro=pd.read_csv("resources/pro.csv")
+anti=pd.read_csv("resources/anti.csv")
+newss=pd.read_csv("resources/news.csv")
+neutral=pd.read_csv("resources/neutral.csv")
 
 # Displaying the image
 image = "resources/logo3.png"  # Replace with the path to your image file
@@ -57,11 +62,13 @@ news_title=[]
 news_url=[]
 news_image=[]
 
-main_url="https://newsapi.org/v2/everything?q='climate+change'&from=2023-01-01to2023-06-27&sortBy=publishedAt&apiKey="+api_key
+
+current_date = datetime.date.today()
+date_string = current_date.strftime("%Y-%m-%d")
+
+main_url="https://newsapi.org/v2/everything?q='climate+change'&from=2023-01-01to"+date_string+"&sortBy=publishedAt&apiKey="+api_key
 news=requests.get(main_url).json()
-   #print(news)
 article=news["articles"]
-    #print(article)
 
 news_description=[]
 news_title=[]
@@ -72,31 +79,10 @@ for i in article:
     news_description.append(i['description'])
     news_url.append(i['url'])
     news_image.append(i['urlToImage'])
-        
-
-      #  print(news_article)
-
-  #  for j in range(5):
-   #     print(news_title[j])
-   #     print()
-   #     print(news_article[j])
-    #    print("******************************************************************************")
-      #  print(news_url[j])
-       # print(news_image[j])
-
 
 # The main function where we will build the actual app
 def main():
 	"""Tweet Classifier App with Streamlit """
-
-	# Creates a main title and subheader on your page -
-	# these are static across all pages
-	#st.title("Climate Conscious Consulting")
-
-
-
-
-	
 
 	st.markdown(
     """
@@ -126,7 +112,7 @@ def main():
 
 	# Building out the predication page
 	if selection == "Home":
-		st.subheader("News About Climate Change")
+		st.subheader("Latest News About Climate Change")
 
 		cola, mid, colb = st.columns([1,1,1])
 		with cola:
@@ -233,7 +219,7 @@ def main():
 
 				st.set_option('deprecation.showPyplotGlobalUse', False)
 				st.write("Anti Sentiment")
-				allwords2 = ' '.join([msg for msg in raw['message']])
+				allwords2 = ' '.join([msg for msg in anti['message']])
 				WordCloudtest2 = WordCloud(width = 800, height=500, random_state = 21 , max_font_size =119).generate(allwords2)
 				plt.imshow(WordCloudtest2, interpolation = 'bilinear')
 				plt.axis('off')
@@ -241,7 +227,7 @@ def main():
 
 				st.set_option('deprecation.showPyplotGlobalUse', False)
 				st.write("Pro Sentiment")
-				allwords3 = ' '.join([msg for msg in raw['message']])
+				allwords3 = ' '.join([msg for msg in pro['message']])
 				WordCloudtest3 = WordCloud(width = 800, height=500, random_state = 21 , max_font_size =119).generate(allwords3)
 				plt.imshow(WordCloudtest3, interpolation = 'bilinear')
 				plt.axis('off')
@@ -249,7 +235,7 @@ def main():
 
 				st.set_option('deprecation.showPyplotGlobalUse', False)
 				st.write("News Sentiment")
-				allwords4 = ' '.join([msg for msg in raw['message']])
+				allwords4 = ' '.join([msg for msg in newss['message']])
 				WordCloudtest4 = WordCloud(width = 800, height=500, random_state = 21 , max_font_size =119).generate(allwords4)
 				plt.imshow(WordCloudtest4, interpolation = 'bilinear')
 				plt.axis('off')
@@ -257,7 +243,7 @@ def main():
 
 				st.set_option('deprecation.showPyplotGlobalUse', False)
 				st.write("Neutral Sentiment")
-				allwords5 = ' '.join([msg for msg in raw['message']])
+				allwords5 = ' '.join([msg for msg in neutral['message']])
 				WordCloudtest5 = WordCloud(width = 800, height=500, random_state = 21 , max_font_size =119).generate(allwords5)
 				plt.imshow(WordCloudtest5, interpolation = 'bilinear')
 				plt.axis('off')
@@ -290,7 +276,7 @@ def main():
 
 	if selection=="About":
 			st.markdown("At **Climate Conscious Consulting**, we are dedicated to empowering businesses and organizations to make meaningful strides towards a sustainable future. We understand that climate change is one of the most pressing challenges of our time.") 
-			st.markdown("**Our mission** is to guide and support companies in navigating the complexities of sustainability, helping them integrate environmentally conscious practices into their operations and decision-making processes. We recognize that addressing climate change requires a holistic approach, encompassing not only environmental considerations but also social and economic factors. By considering the triple bottom line—people, planet, and profit—we help our clients create long-term value while minimizing their environmental impact.")
+			st.markdown("**Our mission** since this company was established in 2016 is to guide and support companies in navigating the complexities of sustainability, helping them integrate environmentally conscious practices into their operations and decision-making processes. We recognize that addressing climate change requires a holistic approach, encompassing not only environmental considerations but also social and economic factors. By considering the triple bottom line—people, planet, and profit—we help our clients create long-term value while minimizing their environmental impact.")
 			st.write("With our expert team of sustainability consultants, we offer a comprehensive range of services tailored to meet the unique needs of each organization. From conducting thorough environmental assessments to developing and implementing sustainable strategies, we provide the tools and knowledge necessary to drive positive change. Our solutions are designed to optimize resource efficiency, reduce greenhouse gas emissions, and enhance overall sustainability performance.")
 			st.write("We are committed to staying at the forefront of sustainability trends and best practices. We continuously research and analyze the latest advancements in the field using cutting edge technologies, ensuring that our clients receive cutting-edge insights and innovative solutions. We believe in collaboration and actively engage with our clients, working hand in hand to develop strategies that align with their goals and values.")  
 			st.markdown("By choosing **Climate Conscious Consulting** as your sustainability partner, you can be confident that you are working with a team that is passionate about creating a more sustainable future. Together, we can make a significant impact and foster a world where businesses thrive while respecting the planet and its inhabitants.")      
