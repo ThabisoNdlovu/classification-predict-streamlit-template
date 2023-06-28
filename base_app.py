@@ -159,7 +159,7 @@ def main():
 				
 				plt.axis('off')
 				st.pyplot(plt.show())
-		elif st.checkbox('Show Prediction'):
+		elif st.checkbox('Show Predictions'):
 
 			st.write(result[['tweetid', 'sentiment']].head()) # will write the df to the page
 			st.info("The Machine Learning Model used is the Logistic Regression.")
