@@ -26,7 +26,6 @@ import streamlit as st
 import requests
 import joblib,os
 from streamlit_option_menu import option_menu
-import streamlit_scrollable_textbox as stx
 from wordcloud import WordCloud
 from prettytable import PrettyTable
 import matplotlib.pyplot as plt
