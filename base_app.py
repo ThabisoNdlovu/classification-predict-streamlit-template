@@ -254,7 +254,7 @@ def main():
 			st.info("The Machine Learning Model used is the Logistic Regression.")
 			opt = st.radio('Plot  type:',['Pie Chart'])
 			if opt =="Pie Chart":
-				st.markdown('<h3>Pie chart for percentage of Prediction Result</h3>',unsafe_allow_html=True)
+				st.markdown('<h3>Pie Chart for Percentage of Prediction Result</h3>',unsafe_allow_html=True)
 				fig1, ax1 = plt.subplots()
 				ax1.pie(result['sentiment'].value_counts(),labels = ["Pro","News","Neutral","Anti"], autopct='%1.1f%%',shadow=False, startangle=90)
 				ax1.axis('equal')
