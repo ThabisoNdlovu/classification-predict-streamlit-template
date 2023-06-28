@@ -23,8 +23,10 @@
 """
 # Streamlit dependencies
 import streamlit as st
+import requests
 import joblib,os
 from streamlit_option_menu import option_menu
+import streamlit_scrollable_textbox as stx
 from wordcloud import WordCloud
 from prettytable import PrettyTable
 import matplotlib.pyplot as plt
@@ -47,6 +49,41 @@ image = "resources/logo3.png"  # Replace with the path to your image file
 cola, mid, colb = st.columns([25,1,40])
 with mid:
 	st.image(image, width=200)
+
+
+api_key="5d6d2845b4a142358efd006e6c98140a"
+news_description=[]
+news_title=[]
+news_url=[]
+news_image=[]
+
+main_url="https://newsapi.org/v2/everything?q='climate+change'&from=2023-01-01to2023-06-27&sortBy=publishedAt&apiKey="+api_key
+news=requests.get(main_url).json()
+   #print(news)
+article=news["articles"]
+    #print(article)
+
+news_description=[]
+news_title=[]
+news_url=[]
+news_image=[]
+for i in article:
+    news_title.append(i['title'])
+    news_description.append(i['description'])
+    news_url.append(i['url'])
+    news_image.append(i['urlToImage'])
+        
+
+      #  print(news_article)
+
+  #  for j in range(5):
+   #     print(news_title[j])
+   #     print()
+   #     print(news_article[j])
+    #    print("******************************************************************************")
+      #  print(news_url[j])
+       # print(news_image[j])
+
 
 # The main function where we will build the actual app
 def main():
@@ -89,12 +126,46 @@ def main():
 
 	# Building out the predication page
 	if selection == "Home":
+		st.subheader("News About Climate Change")
+
+		cola, mid, colb = st.columns([1,1,1])
+		with cola:
+			st.markdown(f"**{news_title[0]}**")
+			st.image(news_image[0])
+			st.write(news_description[0])
+        	#st.write(news_description[0])
+			st.write(news_url[0])
+		with mid:
+			st.markdown(f"**{news_title[1]}**")
+			st.image(news_image[1])
+			st.write(news_description[1])
+        	#st.write(news_description[0])
+			st.write(news_url[1])
+        	#news_url.append(i['url'])
+        	#news_image.append(i['urlToImage'])
+		with colb:
+			st.markdown(f"**{news_title[2]}**")
+			st.image(news_image[2])
+			st.write(news_description[2])
+        	#st.write(news_description[0])
+			st.write(news_url[2])
+			
+		
+
+
+
+
 		st.subheader("Let's classify")
 	
 
 		#st.info("Prediction with ML Models")
 		# Creating a text box for user input
 		tweet_text = st.text_area("Enter Your Message","")
+
+		news_emoji="\U0001F4F0"
+		anti_emoji="\U0001F44E"
+		neutral_emoji="\U0001F610"
+		pro_emoji="\U0001F44D"
 
 		
 
@@ -110,8 +181,8 @@ def main():
 			# When model has successfully run, will print prediction
 			# You can use a dictionary or similar structure to make this output
 			# more human interpretable.
-			prediction_dic =  {-1:"Anti: the tweet does not believe in man-made climate change", 0:"Neutral: the tweet neither supports nor refutes the belief of man-made climate change",
-			1:"Pro: the tweet supports the belief of man-made climate change", 2:"News: the tweet links to factual news about climate change"}
+			prediction_dic =  {-1:"Anti: the tweet does not believe in man-made climate change"+anti_emoji, 0:"Neutral: the tweet neither supports nor refutes the belief of man-made climate change"+neutral_emoji,
+			1:"Pro: the tweet supports the belief of man-made climate change"+pro_emoji, 2:"News: the tweet links to factual news about climate change"+news_emoji}
 			st.success("This is classified as: {}".format(prediction_dic[prediction[0]]))
 	if selection == "The Team":
 		st.title("")
@@ -145,24 +216,68 @@ def main():
 
 			opt = st.radio('Plot  type:',['Bar', 'Word Cloud'])
 			if opt=='Bar':
-				st.markdown('<h3 class="centered-title">Sentiment Occurrence</h3>',unsafe_allow_html=True)
+				st.markdown('<h3 class="centered-title">Spread of Sentiments</h3>',unsafe_allow_html=True)
 				xx = raw['sentiment'].value_counts()
 				st.bar_chart(xx)
 				
 			else:
 				st.set_option('deprecation.showPyplotGlobalUse', False)
 				st.markdown('<h3 class="centered-title">Most Frequent Words</h3>',unsafe_allow_html=True)
-				allwords = ' '.join([msg for msg in raw['message']])
-				WordCloudtest = WordCloud(width = 800, height=500, random_state = 21 , max_font_size =119).generate(allwords)
-				
-				plt.imshow(WordCloudtest, interpolation = 'bilinear')
-				
+				st.write("Sentiments Combined")
+				allwords1 = ' '.join([msg for msg in raw['message']])
+				WordCloudtest1 = WordCloud(width = 800, height=500, random_state = 21 , max_font_size =119).generate(allwords1)
+				plt.imshow(WordCloudtest1, interpolation = 'bilinear')
 				plt.axis('off')
 				st.pyplot(plt.show())
+
+
+				st.set_option('deprecation.showPyplotGlobalUse', False)
+				st.write("Anti Sentiment")
+				allwords2 = ' '.join([msg for msg in raw['message']])
+				WordCloudtest2 = WordCloud(width = 800, height=500, random_state = 21 , max_font_size =119).generate(allwords2)
+				plt.imshow(WordCloudtest2, interpolation = 'bilinear')
+				plt.axis('off')
+				st.pyplot(plt.show())
+
+				st.set_option('deprecation.showPyplotGlobalUse', False)
+				st.write("Pro Sentiment")
+				allwords3 = ' '.join([msg for msg in raw['message']])
+				WordCloudtest3 = WordCloud(width = 800, height=500, random_state = 21 , max_font_size =119).generate(allwords3)
+				plt.imshow(WordCloudtest3, interpolation = 'bilinear')
+				plt.axis('off')
+				st.pyplot(plt.show())
+
+				st.set_option('deprecation.showPyplotGlobalUse', False)
+				st.write("News Sentiment")
+				allwords4 = ' '.join([msg for msg in raw['message']])
+				WordCloudtest4 = WordCloud(width = 800, height=500, random_state = 21 , max_font_size =119).generate(allwords4)
+				plt.imshow(WordCloudtest4, interpolation = 'bilinear')
+				plt.axis('off')
+				st.pyplot(plt.show())
+
+				st.set_option('deprecation.showPyplotGlobalUse', False)
+				st.write("Neutral Sentiment")
+				allwords5 = ' '.join([msg for msg in raw['message']])
+				WordCloudtest5 = WordCloud(width = 800, height=500, random_state = 21 , max_font_size =119).generate(allwords5)
+				plt.imshow(WordCloudtest5, interpolation = 'bilinear')
+				plt.axis('off')
+				st.pyplot(plt.show())
+
 		elif st.checkbox('Show Predictions'):
 
 			st.write(result[['tweetid', 'sentiment']].head()) # will write the df to the page
 			st.info("The Machine Learning Model used is the Logistic Regression.")
+			opt = st.radio('Plot  type:',['Pie Chart'])
+			if opt =="Pie Chart":
+				st.markdown('<h3>Pie chart for percentage of Prediction Result</h3>',unsafe_allow_html=True)
+				fig1, ax1 = plt.subplots()
+				ax1.pie(result['sentiment'].value_counts(),labels = ["Pro","News","Neutral","Anti"], autopct='%1.1f%%',shadow=False, startangle=90)
+				ax1.axis('equal')
+				ax1.set_facecolor("black")  # Equal aspect ratio ensures that pie is drawn as a circle.
+				fig1.patch.set_alpha(0)
+				ax1.xaxis.label.set_color('red')
+				st.pyplot(fig1)
+
 	if selection =="Contact Us":
 			col1, mid, col2 = st.columns([80,1,80])
 			st.markdown("**Email:** info@climateconsciousconsulting.com")
